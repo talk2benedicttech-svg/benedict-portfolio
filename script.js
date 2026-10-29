@@ -7,6 +7,29 @@ const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const revealItems = [...document.querySelectorAll('.reveal')];
 const countValues = [...document.querySelectorAll('[data-count]')];
 
+// Show the branded intro while the document finishes loading, then reveal the site.
+const portfolioLoader = document.querySelector('.portfolio-loader');
+if (portfolioLoader) {
+  const loaderStartedAt = performance.now();
+  let loaderFinished = false;
+
+  const finishPortfolioLoading = () => {
+    if (loaderFinished) return;
+    loaderFinished = true;
+    const minimumDuration = reducedMotion.matches ? 280 : 900;
+    const remaining = Math.max(0, minimumDuration - (performance.now() - loaderStartedAt));
+
+    window.setTimeout(() => {
+      document.documentElement.classList.remove('portfolio-loading');
+      document.documentElement.classList.add('portfolio-ready');
+    }, remaining);
+  };
+
+  if (document.readyState === 'complete') finishPortfolioLoading();
+  else window.addEventListener('load', finishPortfolioLoading, { once: true });
+  window.setTimeout(finishPortfolioLoading, 2400);
+}
+
 function setTheme(theme, save = false) {
   const isLight = theme === 'light';
   document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
