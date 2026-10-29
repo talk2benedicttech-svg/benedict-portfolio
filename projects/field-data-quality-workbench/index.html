@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#102d2a" />
+    <meta name="description" content="A local-first CSV quality review demo using synthetic field survey records." />
+    <title>Fieldnote — Data quality workbench</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../" aria-label="Return to Benedict's portfolio"><span class="brand-mark">F.</span><span>FIELDNOTE<small>DATA QUALITY WORKBENCH</small></span></a>
+      <div class="top-meta"><span class="local-badge"><i></i> BROWSER-ONLY DEMO</span><a href="../../#work">Back to portfolio <span aria-hidden="true">↗</span></a></div>
+    </header>
+
+    <main class="layout">
+      <section class="intro">
+        <div class="intro-copy"><p class="eyebrow">FIELD DATA · REVIEW DESK / 01</p><h1>Find the gaps<br />before the <em>report.</em></h1><p class="intro-text">A small, practical tool for checking survey exports. Import a CSV, review the rows that need attention, then export a clean copy.</p></div>
+        <div class="privacy-note"><span aria-hidden="true">◉</span><div><strong>Your file stays here.</strong><p>Checks run in this browser. This demo does not upload or store your file.</p></div></div>
+      </section>
+
+      <section class="control-panel" aria-labelledby="import-title">
+        <div class="panel-heading"><div><p class="eyebrow">01 / DATA SOURCE</p><h2 id="import-title">Bring in a CSV</h2></div><span class="file-type">.CSV</span></div>
+        <div class="import-row"><label class="upload-button" for="csv-file"><span aria-hidden="true">↑</span> Choose CSV file</label><input id="csv-file" type="file" accept=".csv,text/csv" /><span id="file-name" class="file-name">No file selected</span><button id="load-sample" class="quiet-button" type="button">Load synthetic sample</button></div>
+        <p class="hint">Expected fields: <code>submission_id</code>, <code>submitted_at</code>, <code>respondent_age</code>, <code>community</code>, <code>consent</code>. Header names are case-insensitive.</p>
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      </section>
+
+      <section class="review-section" aria-labelledby="review-title">
+        <div class="review-heading"><div><p class="eyebrow">02 / QUALITY REVIEW</p><h2 id="review-title">Submission overview</h2><p id="dataset-caption" class="dataset-caption">Synthetic practice dataset · no real respondent data</p></div><div class="review-actions"><button id="download-sample" class="quiet-button" type="button">Download sample CSV</button><button id="export-clean" class="primary-button" type="button" disabled>Export clean rows <span aria-hidden="true">↗</span></button></div></div>
+
+        <div class="metric-grid" aria-label="Data quality summary">
+          <article class="metric"><span>RECORDS REVIEWED</span><strong id="metric-total">—</strong><small>Rows in current file</small></article>
+          <article class="metric metric-warn"><span>NEEDS ATTENTION</span><strong id="metric-issues">—</strong><small>One or more checks failed</small></article>
+          <article class="metric metric-good"><span>READY TO EXPORT</span><strong id="metric-clean">—</strong><small>Passed the checks below</small></article>
+          <article class="metric"><span>ISSUE RATE</span><strong id="metric-rate">—</strong><small>Rows with at least one issue</small></article>
+        </div>
+
+        <div class="table-shell">
+          <div class="table-toolbar"><div><h3>Survey records</h3><span id="rows-count" class="rows-count"></span></div><div class="table-controls"><label class="search-label"><span class="sr-only">Search records</span><input id="search" type="search" placeholder="Search records…" /></label><label class="filter-label"><span class="sr-only">Filter records</span><select id="filter"><option value="all">All records</option><option value="issues">Needs attention</option><option value="clean">Ready to export</option></select></label></div></div>
+          <div class="table-scroll"><table><thead><tr><th scope="col">SUBMISSION ID</th><th scope="col">SUBMITTED AT</th><th scope="col">AGE</th><th scope="col">COMMUNITY</th><th scope="col">CONSENT</th><th scope="col">REVIEW</th><th scope="col">WHAT TO REVIEW</th></tr></thead><tbody id="records-body"></tbody></table></div>
+          <div id="empty-state" class="empty-state" hidden><span aria-hidden="true">⌕</span><strong>No matching records</strong><p>Try a different search or filter.</p></div>
+          <div class="table-foot"><span><i class="legend-dot dot-issue"></i> Needs attention</span><span><i class="legend-dot dot-clean"></i> Ready to export</span><span class="synthetic-label">SYNTHETIC DATA ONLY</span></div>
+        </div>
+      </section>
+
+      <section class="rules-section" aria-labelledby="rules-title"><div class="rules-title"><p class="eyebrow">03 / CHECKS APPLIED</p><h2 id="rules-title">Simple rules, visible results.</h2></div><div class="rules-list"><article><span>01</span><div><strong>Required fields</strong><p>Submission ID, age, community and consent must be present.</p></div></article><article><span>02</span><div><strong>Unique submissions</strong><p>Repeated submission IDs are flagged for review.</p></div></article><article><span>03</span><div><strong>Usable values</strong><p>Dates must parse, age must be 0–120, and consent must be yes or no.</p></div></article></div></section>
+      <footer><span>FIELDNOTE · A DEMO BY WANNYAM TERKUMA BENEDICT</span><span>All sample records are fictional.</span></footer>
+    </main>
+  </body>
+</html>
+

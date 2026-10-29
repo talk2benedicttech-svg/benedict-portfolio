@@ -16,4 +16,7 @@ Open `index.html` in a browser, or serve this folder with any static file server
 - `projects/field-data-quality-workbench/` — a local-first, synthetic-data CSV review demo
 - `PROJECT-ROADMAP.md` — proposed next projects, separated from completed work
 
-The Ngosue International School project links to its live public website at [nisaliade.netlify.app](https://nisaliade.netlify.app/). The project roadmap tracks proposed portfolio projects.
+The page uses Google Fonts when network access is available and falls back to system serif/sans-serif fonts otherwise.
+
+The Ngosue International School project links to its live public website at [nisaliade.netlify.app](https://nisaliade.netlify.app/). The portfolio workspace does not currently have a Git repository or remote configured; see `PROJECT-ROADMAP.md` for publication notes.
+
