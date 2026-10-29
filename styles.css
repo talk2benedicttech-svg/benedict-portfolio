@@ -6,3 +6,13 @@
 
 @media(max-width:650px){.hero h1{font-size:clamp(54px,15vw,75px);letter-spacing:-4.5px}}
 
+/* Motion is opt-in so content stays visible if JavaScript is unavailable. */
+.reveal{opacity:1;transform:none}
+.motion-ready .reveal:not(.is-visible){opacity:0;transform:translateY(20px)}
+.hero-proof strong span[data-count]{font-size:inherit;color:inherit}
+.hero-proof strong span[aria-hidden="true"]{font-size:15px;color:var(--green)}
+.site-nav a[aria-current="location"]:not(.nav-contact){color:var(--green)}
+:focus-visible{outline:2px solid var(--green);outline-offset:4px}
+
+@media(prefers-reduced-motion:reduce){.motion-ready .reveal:not(.is-visible){opacity:1;transform:none}}
+
