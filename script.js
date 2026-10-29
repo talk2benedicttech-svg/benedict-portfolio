@@ -2,8 +2,70 @@ const menuToggle = document.querySelector('.menu-toggle');
 const siteNav = document.querySelector('.site-nav');
 const mobileMenu = window.matchMedia('(max-width: 650px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const themeToggle = document.querySelector('.theme-toggle');
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const revealItems = [...document.querySelectorAll('.reveal')];
 const countValues = [...document.querySelectorAll('[data-count]')];
+
+function setTheme(theme, save = false) {
+  const isLight = theme === 'light';
+  document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
+  themeToggle?.setAttribute('aria-pressed', String(isLight));
+  themeToggle?.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
+  themeToggle?.setAttribute('title', isLight ? 'Switch to dark theme' : 'Switch to light theme');
+  const icon = themeToggle?.querySelector('span');
+  if (icon) icon.textContent = isLight ? '◐' : '☼';
+  themeColorMeta?.setAttribute('content', isLight ? '#f7f7f5' : '#09090b');
+
+  if (save) {
+    try {
+      localStorage.setItem('portfolio-theme', isLight ? 'light' : 'dark');
+    } catch {
+      // Theme switching still works for this visit if storage is unavailable.
+    }
+  }
+}
+
+let savedTheme = null;
+try {
+  savedTheme = localStorage.getItem('portfolio-theme');
+} catch {
+  // Keep the default dark appearance if storage is unavailable.
+}
+setTheme(savedTheme === 'light' ? 'light' : 'dark');
+themeToggle?.addEventListener('click', () => {
+  const nextTheme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  setTheme(nextTheme, true);
+});
+
+const roleText = document.querySelector('#typed-role');
+const roles = ['Software Developer', 'Digital Skills Trainer', 'Data Collection Specialist'];
+let roleIndex = 0;
+let characterIndex = roleText?.textContent.length || 0;
+let deleting = false;
+let typingTimer;
+
+function typeNextCharacter() {
+  if (!roleText || reducedMotion.matches) return;
+
+  const currentRole = roles[roleIndex];
+  characterIndex += deleting ? -1 : 1;
+  roleText.textContent = currentRole.slice(0, characterIndex);
+
+  let pause = deleting ? 48 : 92;
+  if (!deleting && characterIndex === currentRole.length) pause = 1250;
+  if (deleting && characterIndex === 0) {
+    deleting = false;
+    roleIndex = (roleIndex + 1) % roles.length;
+    pause = 300;
+  } else if (!deleting && characterIndex === currentRole.length) {
+    deleting = true;
+  }
+
+  typingTimer = window.setTimeout(typeNextCharacter, pause);
+}
+
+if (roleText && !reducedMotion.matches) typingTimer = window.setTimeout(typeNextCharacter, 700);
 
 function setMenuOpen(open, { returnFocus = false } = {}) {
   if (!menuToggle || !siteNav) return;
@@ -121,13 +183,22 @@ if ('IntersectionObserver' in window && linkedSections.length) {
 }
 
 reducedMotion.addEventListener?.('change', (event) => {
-  if (!event.matches) return;
+  if (event.matches) {
+    document.documentElement.classList.remove('motion-ready');
+    revealObserver?.disconnect();
+    countObserver?.disconnect();
+    revealItems.forEach((item) => item.classList.add('is-visible'));
+    countValues.forEach((item) => { item.textContent = item.dataset.count; });
+    window.clearTimeout(typingTimer);
+    if (roleText) roleText.textContent = roles[roleIndex];
+    return;
+  }
 
-  document.documentElement.classList.remove('motion-ready');
-  revealObserver?.disconnect();
-  countObserver?.disconnect();
-  revealItems.forEach((item) => item.classList.add('is-visible'));
-  countValues.forEach((item) => { item.textContent = item.dataset.count; });
+  if (roleText) {
+    characterIndex = roles[roleIndex].length;
+    deleting = true;
+    typingTimer = window.setTimeout(typeNextCharacter, 700);
+  }
 });
 
 const year = document.querySelector('#year');
